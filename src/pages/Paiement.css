@@ -1,0 +1,192 @@
+.payment-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #E2ECFF;
+    padding: 50px 20px;
+    font-family: "Lexend Deca", sans-serif;
+}
+
+.payment-container h1 {
+    color: #1D1D1D;
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.payment-container h2 {
+    color: #1D1D1D;
+    font-size: 1.6rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.payment-container p {
+    color: #666;
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+.payment-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    width: 85%;
+    max-width: 1000px;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.product-info {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.product-card {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.product-info img {
+    width: 120px;
+    height: auto;
+    border-radius: 10px;
+    margin-right: 15px;
+    background-color: #EEEEEE;
+    padding: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.details h3 {
+    font-size: 1rem;
+    color: #1D1D1D;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.details label {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #1D1D1D;
+    margin-right: 5px;
+}
+
+.details select {
+    padding: 5px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 0.8rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.details select:focus {
+    border-color: #1D1D1D;
+}
+
+.details p {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #1D1D1D;
+    margin-top: 8px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+form input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+form input:focus {
+    border-color: #1D1D1D;
+}
+
+form button {
+    background-color: #1D1D1D;
+    color: #D2DEF6;
+    border: none;
+    padding: 14px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 8px;
+    transition: background 0.3s ease, transform 0.2s ease;
+    margin-top: 10px;
+}
+
+form button button:hover {
+    background-color: #333;
+    transform: scale(1.05);
+}
+
+.quantity-control {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .quantity-control p {
+    font-size: 14px;
+    margin: 0;
+  }
+  
+  .quantity {
+    font-size: 18px;
+    margin: 5px 0;
+  }
+  
+  .buttons {
+    display: flex;
+    align-items: center;
+  }
+  
+  .buttons button {
+    font-size: 12px;
+    padding: 5px 8px;
+    margin: 0 5px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f0f0f0;
+    transition: background-color 0.3s;
+  }
+  
+  .buttons button:hover {
+    background-color: #ddd;
+  }
+  
