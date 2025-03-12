@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import "./Paiement.css";
 import MontreNoire from "../assets/1.png";
 import MontreRouge from "../assets/6.png";
+import MontreVerte from "../assets/2.png";
 
 const PaymentPage = () => {
   const [quantityNoire, setQuantityNoire] = useState(1);
   const [quantityRouge, setQuantityRouge] = useState(1);
+  const [quantityVerte, setQuantityVerte] = useState(1);
   const [cardNumber, setCardNumber] = useState("");
   const [expiry, setExpiry] = useState("");
   const [cvc, setCvc] = useState("");
@@ -28,6 +30,12 @@ const PaymentPage = () => {
         setQuantityRouge(quantityRouge + 1);
       } else if (type === "decrease" && quantityRouge > 1) {
         setQuantityRouge(quantityRouge - 1);
+      }
+    } else if (product === "verte") {
+      if (type === "increase" && quantityVerte < 100) {
+        setQuantityVerte(quantityVerte + 1);
+      } else if (type === "decrease" && quantityVerte > 1) {
+        setQuantityVerte(quantityVerte - 1);
       }
     }
   };
@@ -78,6 +86,27 @@ const PaymentPage = () => {
               </div>
               <br></br>
               <p>Prix: {650 * quantityRouge}€</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Montre Verte */}
+        <div className="product-info">
+          <div className="product-card">
+            <img src={MontreVerte} alt="Montre Verte" />
+            <div className="details">
+              <h3>Montre Verte Élégante</h3>
+              <br></br>
+              <div className="quantity-control">
+                <p>Quantité :</p>
+                <div className="quantity">{quantityVerte}</div>
+                <div className="buttons">
+                  <button onClick={() => changeQuantity("verte", "decrease")}>-</button>
+                  <button onClick={() => changeQuantity("verte", "increase")}>+</button>
+                </div>
+              </div>
+              <br></br>
+              <p>Prix: {520 * quantityVerte}€</p>
             </div>
           </div>
         </div>
