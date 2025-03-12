@@ -14,6 +14,10 @@ import MontreBleu from './assets/3.png';
 import MontreCyan from './assets/4.png';
 import MontreJaune from './assets/5.png';
 import MontreRouge from './assets/6.png';
+import Login from './pages/login';
+import Paiement from './pages/Paiement';
+import Profile from './pages/Profile';
+
 import './App.css';
 
 function Home() {
@@ -47,9 +51,9 @@ function Home() {
         <h1>Horizon Style</h1>
         <ul>
           <li><a href="#">Accueil<img src={HomeLogo} alt="Accueil" /></a></li>
-          <li><a href="#">Produits<img src={MontreLogo} alt="Produit" /></a></li>
-          <li><a href="#">Panier<img src={PanierLogo} alt="Panier" /></a></li>
-          <li><a href="#">Compte<img src={UserLogo} alt="Compte" /></a></li>
+          <li><a href="#Produit">Produits<img src={MontreLogo} alt="Produit" /></a></li>
+          <li><a href={"Paiement"}>Panier<img src={PanierLogo} alt="Panier" /></a></li>
+          <li><a href={"Login"}>Compte<img src={UserLogo} alt="Compte" /></a></li>
         </ul>
       </nav>
 
@@ -58,7 +62,7 @@ function Home() {
         <img src={images[currentIndex]} alt="Montre" />
         <button className="right" onClick={handleNext}><img src={Fleche} alt="Next" /></button>
       </div>
-      <div className="Produit">
+      <div id='Produit' className="Produit">
         {products.map((product, index) => (
           <span key={index}>
             <img src={product.image} alt={product.name} />

@@ -1,7 +1,6 @@
 const request = require('supertest');
 const { app, db } = require('../backend/app');
 
-
 describe('Test de login', () => {
   beforeEach(() => {
     jest.clearAllMocks();
