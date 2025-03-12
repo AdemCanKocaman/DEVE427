@@ -2,11 +2,17 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     min-height: 100vh;
     background-color: #E2ECFF;
     padding: 50px 20px;
     font-family: "Lexend Deca", sans-serif;
+    box-sizing: border-box;
+}
+
+.payment-container h1, .payment-container h2, .payment-container p {
+    margin: 0;
+    padding: 0;
 }
 
 .payment-container h1 {
@@ -33,12 +39,14 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 30px;
-    width: 85%;
+    width: 100%;
     max-width: 1000px;
     background: white;
     padding: 30px;
     border-radius: 15px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    margin-bottom: 30px;
+    box-sizing: border-box;
 }
 
 .product-info {
@@ -112,7 +120,7 @@
     margin-top: 8px;
 }
 
-form {
+#Form-Paiment {
     display: flex;
     flex-direction: column;
     padding: 20px;
@@ -121,7 +129,7 @@ form {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-form input {
+#Form-Paiment input {
     width: 100%;
     padding: 12px;
     margin: 10px 0;
@@ -132,11 +140,11 @@ form input {
     transition: all 0.3s ease;
 }
 
-form input:focus {
+#Form-Paiment input:focus {
     border-color: #1D1D1D;
 }
 
-form button {
+#Form-Paiment button {
     background-color: #1D1D1D;
     color: #D2DEF6;
     border: none;
@@ -149,7 +157,7 @@ form button {
     margin-top: 10px;
 }
 
-form button button:hover {
+#Form-Paiment button:hover {
     background-color: #333;
     transform: scale(1.05);
 }
@@ -158,24 +166,24 @@ form button button:hover {
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-  
-  .quantity-control p {
+}
+
+.quantity-control p {
     font-size: 14px;
     margin: 0;
-  }
-  
-  .quantity {
+}
+
+.quantity {
     font-size: 18px;
     margin: 5px 0;
-  }
-  
-  .buttons {
+}
+
+.buttons {
     display: flex;
     align-items: center;
-  }
-  
-  .buttons button {
+}
+
+.buttons button {
     font-size: 12px;
     padding: 5px 8px;
     margin: 0 5px;
@@ -184,9 +192,8 @@ form button button:hover {
     border-radius: 4px;
     background-color: #f0f0f0;
     transition: background-color 0.3s;
-  }
-  
-  .buttons button:hover {
+}
+
+.buttons button:hover {
     background-color: #ddd;
-  }
-  
+}

@@ -59,7 +59,7 @@ const Register = () => {
       <h1 id='RegisterFirstTitle'>Horizon Style</h1>
         <img id='MontreNoir' src={MontreNoire} alt="Montre Noire"/>
         <img id='MontreRouge' src={MontreRouge} alt="Montre Rouge"/>
-      <form onSubmit={handleRegister}>
+      <form id='Form-Register' onSubmit={handleRegister}>
         <input
           id='prenom-Register'
           type="text"

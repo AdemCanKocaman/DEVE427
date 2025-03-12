@@ -48,7 +48,7 @@
     left: 8%;
     transform: translate(-50%, -50%);
 }
-form{
+#Form-Register{
     position: absolute;
     top: 60%;
     left: 50%;
@@ -63,7 +63,7 @@ form{
     border-radius: 20px;
     box-shadow: 0 0 5px #101010;
 }
-.register-container form input{
+.register-container #Form-Register input{
     position: relative;
     top: 20px;
     width: 300px;
@@ -78,10 +78,10 @@ form{
     transition: all 0.3s ease;
     background-color: #EEF4FF;
 }
-.register-container form input:focus{
+.register-container #Form-Register input:focus{
     border-bottom: 2px solid #101010;
 }
-.register-container form #submit-Register{
+.register-container #Form-Register #submit-Register{
     position: relative;
     top: 30px;
     width: 300px;
@@ -97,7 +97,7 @@ form{
     cursor: pointer;
     transition: all 0.3s ease;
 }
-.register-container form .Connecter{
+.register-container #Form-Register .Connecter{
     position: relative;
     top: 50px;
     width: 300px;
