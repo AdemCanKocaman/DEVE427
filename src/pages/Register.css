@@ -1,0 +1,16 @@
+.register-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #E2ECFF;;
+}
+.register-container img{
+    width: auto;
+    height: 450px;
+}
+.register-container .MontreNoir{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}

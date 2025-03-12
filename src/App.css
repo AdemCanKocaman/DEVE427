@@ -85,7 +85,7 @@ nav ul li a img {
 }
 .Produit {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Üç sütunlu düzen */
+  grid-template-columns: repeat(3, 1fr);
   gap: 30px;
   padding: 50px 20px;
   background-color: #E2ECFF;
