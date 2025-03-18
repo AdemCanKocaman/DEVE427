@@ -1,0 +1,51 @@
+name: Run Tests
+
+on:
+  push:
+    branches:
+      - main  # Ou la branche sur laquelle vous souhaitez exécuter les tests
+  pull_request:
+    branches:
+      - main  # Si vous voulez aussi exécuter les tests lors des PRs
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:5.7
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: panier_db
+        options: --health-cmd="mysqladmin ping --silent" --health-timeout=30s --health-retries=3
+
+    steps:
+      # Étape 1: Vérifier le code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Étape 2: Installer les dépendances (Node.js + MySQL)
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'  # Changez avec la version de Node.js que vous utilisez
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      # Étape 3: Configurer la base de données MySQL pour les tests
+      - name: Wait for MySQL to be ready
+        run: |
+          until mysql -h 127.0.0.1 -u root -prootpassword -e "SELECT 1"; do
+            echo "Waiting for MySQL..."
+            sleep 2
+          done
+          
+      # Étape 4: Exécuter les tests
+      - name: Run tests
+        run: |
+          npm test  # Ou la commande spécifique pour vos tests, ex: `jest`
