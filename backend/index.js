@@ -23,7 +23,7 @@ db.connect((err) => {
   }
 });
 
-// Register Route
+// Route d'inscription
 app.post('/register', (req, res) => {
   const { prenom, nom, email, mot_de_passe, telephone, confirmPassword } = req.body;
 
@@ -41,7 +41,7 @@ app.post('/register', (req, res) => {
   });
 });
 
-// Login Route
+// Route de connexion
 app.post('/login', (req, res) => {
   const { email, mot_de_passe } = req.body;
 
@@ -66,7 +66,7 @@ app.post('/login', (req, res) => {
   });
 });
 
-
+// Route pour récupérer les produits
 app.get('/getProduits', (req, res) => {
   const query = 'SELECT * FROM produit';
   db.query(query, (err, results) => {
@@ -78,43 +78,44 @@ app.get('/getProduits', (req, res) => {
   });
 });
 
+// Route pour ajouter un produit au panier
 app.post('/addToPanier', (req, res) => {
-  const { userId, produitId, nomProduit, prixProduit, imageProduit } = req.body;
+  const { userId, produitId } = req.body;
 
   const queryProduit = 'SELECT * FROM produit WHERE id_produit = ?';
   db.query(queryProduit, [produitId], (err, results) => {
     if (err) {
-      console.error('Database Error:', err);
-      return res.status(500).json({ message: 'Veritabanı hatası!' });
+      console.error('Erreur de base de données:', err);
+      return res.status(500).json({ message: 'Erreur serveur!' });
     }
 
     if (results.length === 0) {
-      return res.status(404).json({ message: 'Ürün bulunamadı!' });
+      return res.status(404).json({ message: 'Produit non trouvé!' });
     }
 
     const queryPanier = 'SELECT * FROM panier WHERE id_user = ?';
     db.query(queryPanier, [userId], (err, panierResults) => {
       if (err) {
-        console.error('Panier Error:', err);
-        return res.status(500).json({ message: 'Sepet kontrol hatası!' });
+        console.error('Erreur de base de données:', err);
+        return res.status(500).json({ message: 'Erreur lors de la récupération du panier!' });
       }
 
       if (panierResults.length === 0) {
         const insertPanier = 'INSERT INTO panier (id_user, total) VALUES (?, 0)';
         db.query(insertPanier, [userId], (err, insertResult) => {
           if (err) {
-            console.error('Insert Panier Error:', err);
-            return res.status(500).json({ message: 'Sepet oluşturulamadı!' });
+            console.error('Erreur lors de la création du panier:', err);
+            return res.status(500).json({ message: 'Impossible de créer un panier!' });
           }
 
           const panierId = insertResult.insertId;
           const insertContenir = 'INSERT INTO contenir (id_panier, id_produit, quantite) VALUES (?, ?, ?)';
           db.query(insertContenir, [panierId, produitId, 1], (err) => {
             if (err) {
-              console.error('Contenir Insert Error:', err);
-              return res.status(500).json({ message: 'Sepete ürün eklenemedi!' });
+              console.error('Erreur lors de l\'ajout au panier:', err);
+              return res.status(500).json({ message: 'Impossible d\'ajouter le produit au panier!' });
             }
-            res.status(200).json({ message: 'Ürün sepete başarıyla eklendi!' });
+            res.status(200).json({ message: 'Produit ajouté au panier avec succès!' });
           });
         });
       } else {
@@ -122,10 +123,10 @@ app.post('/addToPanier', (req, res) => {
         const insertContenir = 'INSERT INTO contenir (id_panier, id_produit, quantite) VALUES (?, ?, ?)';
         db.query(insertContenir, [panierId, produitId, 1], (err) => {
           if (err) {
-            console.error('Contenir Insert Error:', err);
-            return res.status(500).json({ message: 'Sepete ürün eklenemedi!' });
+            console.error('Erreur lors de l\'ajout au panier:', err);
+            return res.status(500).json({ message: 'Impossible d\'ajouter le produit au panier!' });
           }
-          res.status(200).json({ message: 'Ürün sepete başarıyla eklendi!' });
+          res.status(200).json({ message: 'Produit ajouté au panier avec succès!' });
         });
       }
     });

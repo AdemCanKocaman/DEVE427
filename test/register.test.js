@@ -1,9 +1,9 @@
 const request = require('supertest');
 const { app, db } = require('../backend/app');
 
-describe('Test de registre', () => {
+describe('Test de l\'inscription', () => {
   beforeAll(() => {
-    jest.setTimeout(10000); // Increase the timeout for these tests
+    jest.setTimeout(10000); // Augmente le temps d'attente pour ces tests
   });
 
   beforeEach(() => {
@@ -16,7 +16,7 @@ describe('Test de registre', () => {
       nom: 'Doe',
       email: 'john.doe@example.com',
       mot_de_passe: 'password123',
-      confirmPassword: 'differentpassword',
+      confirmPassword: 'differentpassword', // Mot de passe différent
       telephone: '1234567890'
     });
 
@@ -24,15 +24,16 @@ describe('Test de registre', () => {
     expect(res.body.message).toBe('Les mots de passe ne correspondent pas!');
   });
 
-  it('doit renvoyer une erreur si l\'email est déjà pris', async () => {
+  it('doit renvoyer une erreur si l\'email est déjà utilisé', async () => {
+    // Simulation d'un email déjà existant dans la base de données
     db.query.mockImplementationOnce((query, values, callback) => {
-      callback(null, [{ email: 'john.doe@example.com' }]); // Simulating existing email in the DB
+      callback(null, [{ email: 'john.doe@example.com' }]); // Email déjà pris
     });
 
     const res = await request(app).post('/register').send({
       prenom: 'John',
       nom: 'Doe',
-      email: 'john.doe@example.com',
+      email: 'john.doe@example.com', // Email existant
       mot_de_passe: 'password123',
       confirmPassword: 'password123',
       telephone: '1234567890'
@@ -46,7 +47,7 @@ describe('Test de registre', () => {
     const res = await request(app).post('/register').send({
       prenom: 'John',
       nom: 'Doe',
-      email: 'john.doeexample.com', // Invalid email
+      email: 'john.doeexample.com', // Email invalide (manque le "@")
       mot_de_passe: 'password123',
       confirmPassword: 'password123',
       telephone: '1234567890'
