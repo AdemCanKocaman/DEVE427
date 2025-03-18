@@ -1,43 +1,61 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./Paiement.css";
 import MontreNoire from "../assets/1.png";
 import MontreRouge from "../assets/6.png";
 import MontreVerte from "../assets/2.png";
 
 const PaymentPage = () => {
-  const [quantityNoire, setQuantityNoire] = useState(1);
-  const [quantityRouge, setQuantityRouge] = useState(1);
-  const [quantityVerte, setQuantityVerte] = useState(1);
+  const [panier, setPanier] = useState([]);
   const [cardNumber, setCardNumber] = useState("");
   const [expiry, setExpiry] = useState("");
   const [cvc, setCvc] = useState("");
   const [name, setName] = useState("");
+  const [userId, setUserId] = useState(1); // Kullanıcı ID'sini burada belirliyoruz (gerçek kullanıcı ID'sini buraya alacaksınız)
+
+  // Sepeti localStorage'dan al
+  useEffect(() => {
+    const storedPanier = JSON.parse(localStorage.getItem("panier")) || [];
+    setPanier(storedPanier);
+  }, []);
 
   const handlePayment = (e) => {
     e.preventDefault();
-    alert("Paiement réussi !");
+
+    // Ödeme bilgilerini backend API'ye gönder
+    const paymentData = {
+      nom_banque: name,
+      num_carte: cardNumber,
+      date_expiration: expiry,
+      id_user: userId,
+      cvc: cvc,
+    };
+
+    axios
+      .post("http://localhost:3001/addPayment", paymentData)
+      .then((response) => {
+        alert("Paiement réussi !");
+        localStorage.removeItem("panier");
+        setPanier([]);
+      })
+      .catch((error) => {
+        console.error("Ödeme sırasında hata:", error);
+        alert("Ödeme sırasında bir hata oluştu.");
+      });
   };
 
-  const changeQuantity = (product, type) => {
-    if (product === "noire") {
-      if (type === "increase" && quantityNoire < 100) {
-        setQuantityNoire(quantityNoire + 1);
-      } else if (type === "decrease" && quantityNoire > 1) {
-        setQuantityNoire(quantityNoire - 1);
-      }
-    } else if (product === "rouge") {
-      if (type === "increase" && quantityRouge < 100) {
-        setQuantityRouge(quantityRouge + 1);
-      } else if (type === "decrease" && quantityRouge > 1) {
-        setQuantityRouge(quantityRouge - 1);
-      }
-    } else if (product === "verte") {
-      if (type === "increase" && quantityVerte < 100) {
-        setQuantityVerte(quantityVerte + 1);
-      } else if (type === "decrease" && quantityVerte > 1) {
-        setQuantityVerte(quantityVerte - 1);
-      }
+  const changeQuantity = (productIndex, type) => {
+    const updatedPanier = [...panier];
+    const product = updatedPanier[productIndex];
+
+    if (type === "increase" && product.quantity < 100) {
+      product.quantity++;
+    } else if (type === "decrease" && product.quantity > 1) {
+      product.quantity--;
     }
+
+    setPanier(updatedPanier);
+    localStorage.setItem("panier", JSON.stringify(updatedPanier));
   };
 
   return (
@@ -45,71 +63,27 @@ const PaymentPage = () => {
       <h2>Finalisez votre achat</h2>
       <h1>Horizon Style</h1>
       <p>Veuillez entrer vos informations de paiement</p>
-      
+
       <div className="payment-content">
-
-        {/* Montre Noire */}
-        <div className="product-info">
-          <div className="product-card">
-            <img src={MontreNoire} alt="Montre Noire" />
-            <div className="details">
-              <h3>Montre Noire Élégante</h3>
-              <br></br>
-              <div className="quantity-control">
-                <p>Quantité :</p>
-                <div className="quantity">{quantityNoire}</div>
-                <div className="buttons">
-                  <button onClick={() => changeQuantity("noire", "decrease")}>-</button>
-                  <button onClick={() => changeQuantity("noire", "increase")}>+</button>
+        {panier.map((product, index) => (
+          <div className="product-info" key={index}>
+            <div className="product-card">
+              <img src={product.imageProduit} alt={product.nomProduit} />
+              <div className="details">
+                <h3>{product.nomProduit}</h3>
+                <div className="quantity-control">
+                  <p>Quantité :</p>
+                  <div className="quantity">{product.quantity || 1}</div>
+                  <div className="buttons">
+                    <button onClick={() => changeQuantity(index, "decrease")}>-</button>
+                    <button onClick={() => changeQuantity(index, "increase")}>+</button>
+                  </div>
                 </div>
+                <p>Prix: {product.prixProduit * (product.quantity || 1)}€</p>
               </div>
-              <br></br>
-              <p>Prix: {450 * quantityNoire}€</p>
             </div>
           </div>
-        </div>
-
-        {/* Montre Rouge */}
-        <div className="product-info">
-          <div className="product-card">
-            <img src={MontreRouge} alt="Montre Rouge" />
-            <div className="details">
-              <h3>Montre Rouge Élégante</h3>
-              <br></br>
-              <div className="quantity-control">
-                <p>Quantité :</p>
-                <div className="quantity">{quantityRouge}</div>
-                <div className="buttons">
-                  <button onClick={() => changeQuantity("rouge", "decrease")}>-</button>
-                  <button onClick={() => changeQuantity("rouge", "increase")}>+</button>
-                </div>
-              </div>
-              <br></br>
-              <p>Prix: {650 * quantityRouge}€</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Montre Verte */}
-        <div className="product-info">
-          <div className="product-card">
-            <img src={MontreVerte} alt="Montre Verte" />
-            <div className="details">
-              <h3>Montre Verte Élégante</h3>
-              <br></br>
-              <div className="quantity-control">
-                <p>Quantité :</p>
-                <div className="quantity">{quantityVerte}</div>
-                <div className="buttons">
-                  <button onClick={() => changeQuantity("verte", "decrease")}>-</button>
-                  <button onClick={() => changeQuantity("verte", "increase")}>+</button>
-                </div>
-              </div>
-              <br></br>
-              <p>Prix: {520 * quantityVerte}€</p>
-            </div>
-          </div>
-        </div>
+        ))}
 
         <form id="Form-Paiment" onSubmit={handlePayment}>
           <input

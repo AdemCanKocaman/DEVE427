@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 import HomeLogo from '/1.png';
 import MontreLogo from '/2.png';
 import PanierLogo from '/3.png';
@@ -14,13 +16,16 @@ import MontreBleu from './assets/3.png';
 import MontreCyan from './assets/4.png';
 import MontreJaune from './assets/5.png';
 import MontreRouge from './assets/6.png';
-import Login from './pages/login';
-import Paiement from './pages/Paiement';
-import Profile from './pages/Profile';
-
 import './App.css';
 
-function Home() {
+const Home = () => {
+  const { userId } = useParams(); // Kullanıcı ID'sini alıyoruz
+  console.log('User ID:', userId);
+
+  const [produits, setProduits] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const images = [
     MontreNoire,
@@ -30,20 +35,55 @@ function Home() {
     MontreJaune,
     MontreRouge,
   ];
+
   const handlePrev = () => {
     setCurrentIndex((prevIndex) => (prevIndex === 0 ? images.length - 1 : prevIndex - 1));
   };
+
   const handleNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
   };
-  const products = [
-    { image: MontreNoire, name: 'Montre Noire', price: '139.99 €' },
-    { image: MontreRouge, name: 'Montre Rouge', price: '139.99 €' },
-    { image: MontreJaune, name: 'Montre Jaune', price: '139.99 €' },
-    { image: MontreVert, name: 'Montre Vert', price: '139.99 €' },
-    { image: MontreBleu, name: 'Montre Bleue', price: '139.99 €' },
-    { image: MontreCyan, name: 'Montre Cyan', price: '139.99 €' },
-  ];
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/getProduits')
+      .then((response) => {
+        setProduits(response.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError('Erreur!');
+        setLoading(false);
+        console.error(err);
+      });
+  }, []);
+
+  const addToPanier = (produit) => {
+    if (!userId) {
+      alert('Lütfen giriş yapın!');
+      return;
+    }
+
+    // localStorage'da sepete ürün ekleme
+    let panier = JSON.parse(localStorage.getItem('panier')) || [];
+    panier.push({
+      produitId: produit.id,
+      nomProduit: produit.nom_produit,
+      prixProduit: produit.prix,
+      imageProduit: produit.photo,
+    });
+
+    localStorage.setItem('panier', JSON.stringify(panier));
+    alert('Ürün sepete eklendi!');
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <>
@@ -62,15 +102,23 @@ function Home() {
         <img src={images[currentIndex]} alt="Montre" />
         <button className="right" onClick={handleNext}><img src={Fleche} alt="Next" /></button>
       </div>
+
       <div id='Produit' className="Produit">
-        {products.map((product, index) => (
-          <span key={index}>
-            <img src={product.image} alt={product.name} />
-            <p>{product.name}</p>
-            <p className="price">{product.price}</p>
-          </span>
-        ))}
+        {produits.length === 0 ? (
+          <p>Aucun produit</p>
+        ) : (
+          produits.map((produit) => (
+            <span key={produit.id}>
+              <img src={produit.photo} alt={produit.nom_produit} />
+              <p>{produit.nom_produit}</p>
+              <p className="price">{produit.prix} €</p>
+              <p className="stock">Stock : {produit.stock}</p>
+              <button onClick={() => addToPanier(produit)}>Sepete Ekle</button>
+            </span>
+          ))
+        )}
       </div>
+
       <footer>
         <p>Horizon Style</p>
         <ol>
@@ -82,6 +130,6 @@ function Home() {
       </footer>
     </>
   );
-}
+};
 
 export default Home;

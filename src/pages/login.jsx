@@ -28,9 +28,12 @@ const Login = () => {
       });
 
       const data = await response.json();
+      console.log('Response:', data);
       if (response.status === 200) {
-        setMessage('Connexion réussie!');
-        navigate('/');
+        localStorage.setItem('userId', data.id_user);
+        console.log('User ID in localStorage:', localStorage.getItem('userId'));
+        setMessage('Connexion réussie!');      
+        navigate(`/${data.id_user}`);
       } else {
         setMessage(data.message || 'Une erreur est survenue!');
       }
