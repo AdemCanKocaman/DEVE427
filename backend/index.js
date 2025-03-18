@@ -132,27 +132,6 @@ app.post('/addToPanier', (req, res) => {
   });
 });
 
-app.post("/addPayment", (req, res) => {
-  const { nom_banque, num_carte, date_expiration, id_user, cvc } = req.body;
-
-  const query = `
-    INSERT INTO paiements (nom_banque, num_carte, date_expiration, id_user, cvc)
-    VALUES (?, ?, ?, ?, ?)
-  `;
-
-  db.query(
-    query,
-    [nom_banque, num_carte, date_expiration, id_user, cvc],
-    (err, result) => {
-      if (err) {
-        console.error("Ödeme bilgisi eklenirken hata:", err);
-        return res.status(500).json({ message: "Ödeme bilgisi kaydedilemedi!" });
-      }
-      res.status(200).json({ message: "Ödeme bilgisi başarıyla kaydedildi!" });
-    }
-  );
-});
-
 app.listen(port, () => {
   console.log(`API Backend fonctionne sur http://localhost:${port}`);
 });
