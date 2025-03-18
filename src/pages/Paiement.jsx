@@ -1,61 +1,58 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Paiement.css";
-import MontreNoire from "../assets/1.png";
-import MontreRouge from "../assets/6.png";
-import MontreVerte from "../assets/2.png";
 
-const PaymentPage = () => {
+const PagePaiement = () => {
   const [panier, setPanier] = useState([]);
-  const [cardNumber, setCardNumber] = useState("");
-  const [expiry, setExpiry] = useState("");
+  const [numeroCarte, setNumeroCarte] = useState("");
+  const [expiration, setExpiration] = useState("");
   const [cvc, setCvc] = useState("");
-  const [name, setName] = useState("");
-  const [userId, setUserId] = useState(1); // Kullanıcı ID'sini burada belirliyoruz (gerçek kullanıcı ID'sini buraya alacaksınız)
+  const [nomTitulaire, setNomTitulaire] = useState("");
+  const [idUtilisateur, setIdUtilisateur] = useState(1);
 
-  // Sepeti localStorage'dan al
+  // Récupérer le panier depuis le localStorage
   useEffect(() => {
-    const storedPanier = JSON.parse(localStorage.getItem("panier")) || [];
-    setPanier(storedPanier);
+    const panierStocke = JSON.parse(localStorage.getItem("panier")) || [];
+    setPanier(panierStocke);
   }, []);
 
-  const handlePayment = (e) => {
+  const gererPaiement = (e) => {
     e.preventDefault();
 
-    // Ödeme bilgilerini backend API'ye gönder
-    const paymentData = {
-      nom_banque: name,
-      num_carte: cardNumber,
-      date_expiration: expiry,
-      id_user: userId,
+    // Envoyer les informations de paiement à l'API backend
+    const donneesPaiement = {
+      nom_banque: nomTitulaire,
+      num_carte: numeroCarte,
+      date_expiration: expiration,
+      id_user: idUtilisateur,
       cvc: cvc,
     };
 
     axios
-      .post("http://localhost:3001/addPayment", paymentData)
+      .post("http://localhost:3001/addPayment", donneesPaiement)
       .then((response) => {
         alert("Paiement réussi !");
         localStorage.removeItem("panier");
         setPanier([]);
       })
       .catch((error) => {
-        console.error("Ödeme sırasında hata:", error);
-        alert("Ödeme sırasında bir hata oluştu.");
+        console.error("Erreur lors du paiement :", error);
+        alert("Une erreur est survenue lors du paiement.");
       });
   };
 
-  const changeQuantity = (productIndex, type) => {
-    const updatedPanier = [...panier];
-    const product = updatedPanier[productIndex];
+  const modifierQuantite = (indexProduit, type) => {
+    const panierMisAJour = [...panier];
+    const produit = panierMisAJour[indexProduit];
 
-    if (type === "increase" && product.quantity < 100) {
-      product.quantity++;
-    } else if (type === "decrease" && product.quantity > 1) {
-      product.quantity--;
+    if (type === "augmenter" && produit.quantity < 100) {
+      produit.quantity++;
+    } else if (type === "diminuer" && produit.quantity > 1) {
+      produit.quantity--;
     }
 
-    setPanier(updatedPanier);
-    localStorage.setItem("panier", JSON.stringify(updatedPanier));
+    setPanier(panierMisAJour);
+    localStorage.setItem("panier", JSON.stringify(panierMisAJour));
   };
 
   return (
@@ -65,46 +62,46 @@ const PaymentPage = () => {
       <p>Veuillez entrer vos informations de paiement</p>
 
       <div className="payment-content">
-        {panier.map((product, index) => (
+        {panier.map((produit, index) => (
           <div className="product-info" key={index}>
             <div className="product-card">
-              <img src={product.imageProduit} alt={product.nomProduit} />
+              <img src={produit.imageProduit} alt={produit.nomProduit} />
               <div className="details">
-                <h3>{product.nomProduit}</h3>
+                <h3>{produit.nomProduit}</h3>
                 <div className="quantity-control">
                   <p>Quantité :</p>
-                  <div className="quantity">{product.quantity || 1}</div>
+                  <div className="quantity">{produit.quantity || 1}</div>
                   <div className="buttons">
-                    <button onClick={() => changeQuantity(index, "decrease")}>-</button>
-                    <button onClick={() => changeQuantity(index, "increase")}>+</button>
+                    <button onClick={() => modifierQuantite(index, "diminuer")}>-</button>
+                    <button onClick={() => modifierQuantite(index, "augmenter")}>+</button>
                   </div>
                 </div>
-                <p>Prix: {product.prixProduit * (product.quantity || 1)}€</p>
+                <p>Prix: {produit.prixProduit * (produit.quantity || 1)}€</p>
               </div>
             </div>
           </div>
         ))}
 
-        <form id="Form-Paiment" onSubmit={handlePayment}>
+        <form id="Form-Paiement" onSubmit={gererPaiement}>
           <input
             type="text"
             placeholder="Nom du titulaire de la carte"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={nomTitulaire}
+            onChange={(e) => setNomTitulaire(e.target.value)}
             required
           />
           <input
             type="text"
             placeholder="Numéro de carte"
-            value={cardNumber}
-            onChange={(e) => setCardNumber(e.target.value)}
+            value={numeroCarte}
+            onChange={(e) => setNumeroCarte(e.target.value)}
             required
           />
           <input
             type="text"
-            placeholder="Date d'expiration (MM/YY)"
-            value={expiry}
-            onChange={(e) => setExpiry(e.target.value)}
+            placeholder="Date d'expiration (MM/AA)"
+            value={expiration}
+            onChange={(e) => setExpiration(e.target.value)}
             required
           />
           <input
@@ -121,4 +118,4 @@ const PaymentPage = () => {
   );
 };
 
-export default PaymentPage;
+export default PagePaiement;

@@ -7,21 +7,21 @@ describe('Test de addToPanier', () => {
   });
 
   it('doit ajouter un produit au panier avec succès', async () => {
-    // Mocking the product query result (product exists in the database)
+    // Simulation du résultat de la requête produit (le produit existe dans la base de données)
     db.query.mockImplementationOnce((query, values, callback) => {
       if (query.includes('SELECT * FROM produit')) {
         callback(null, [{ id_produit: values[0], nom: 'Produit 1', prix: 100, image: 'image1.jpg' }]);
       }
     });
 
-    // Mocking the panier query result (user already has a panier)
+    // Simulation du résultat de la requête panier (l'utilisateur a déjà un panier)
     db.query.mockImplementationOnce((query, values, callback) => {
       if (query.includes('SELECT * FROM panier')) {
         callback(null, [{ id_panier: 1 }]);
       }
     });
 
-    // Mocking the insert into the contenir table (adding product to panier)
+    // Simulation de l'insertion dans la table contenir (ajout du produit au panier)
     db.query.mockImplementationOnce((query, values, callback) => {
       if (query.includes('INSERT INTO contenir')) {
         callback(null);
@@ -37,48 +37,48 @@ describe('Test de addToPanier', () => {
     });
 
     expect(res.status).toBe(200);
-    expect(res.body.message).toBe('Ürün sepete başarıyla eklendi!');
+    expect(res.body.message).toBe('Le produit a été ajouté au panier avec succès !');
   });
 
   it('doit renvoyer une erreur si le produit n\'existe pas', async () => {
-    // Mocking product query to simulate no product found
+    // Simulation de la requête produit pour simuler l'absence du produit
     db.query.mockImplementationOnce((query, values, callback) => {
       if (query.includes('SELECT * FROM produit')) {
-        callback(null, []); // No product found
+        callback(null, []); // Aucun produit trouvé
       }
     });
 
     const res = await request(app).post('/addToPanier').send({
       userId: 1,
-      produitId: 999, // Non-existent product
+      produitId: 999, // Produit inexistant
       nomProduit: 'Produit Inexistant',
       prixProduit: 100,
       imageProduit: 'image_nonexistent.jpg'
     });
 
     expect(res.status).toBe(404);
-    expect(res.body.message).toBe('Ürün bulunamadı!');
+    expect(res.body.message).toBe('Produit non trouvé !');
   });
 
   it('doit renvoyer une erreur si la création du panier échoue', async () => {
-    // Mocking product query to simulate product found
+    // Simulation de la requête produit pour simuler un produit trouvé
     db.query.mockImplementationOnce((query, values, callback) => {
       if (query.includes('SELECT * FROM produit')) {
         callback(null, [{ id_produit: values[0], nom: 'Produit 1', prix: 100, image: 'image1.jpg' }]);
       }
     });
 
-    // Mocking panier query to simulate no existing panier for user
+    // Simulation de la requête panier pour simuler l'absence de panier existant pour l'utilisateur
     db.query.mockImplementationOnce((query, values, callback) => {
       if (query.includes('SELECT * FROM panier')) {
-        callback(null, []); // No panier found
+        callback(null, []); // Aucun panier trouvé
       }
     });
 
-    // Mocking insert panier to simulate a failure (error during panier creation)
+    // Simulation de l'insertion du panier pour simuler un échec (erreur lors de la création du panier)
     db.query.mockImplementationOnce((query, values, callback) => {
       if (query.includes('INSERT INTO panier')) {
-        callback(new Error('Database error'));
+        callback(new Error('Erreur de base de données'));
       }
     });
 
@@ -91,13 +91,13 @@ describe('Test de addToPanier', () => {
     });
 
     expect(res.status).toBe(500);
-    expect(res.body.message).toBe('Sepet oluşturulamadı!');
+    expect(res.body.message).toBe('Impossible de créer le panier !');
   });
 
   it('doit renvoyer une erreur si la base de données retourne une erreur', async () => {
-    // Mocking a database error in the product query
+    // Simulation d'une erreur de base de données lors de la requête produit
     db.query.mockImplementationOnce((query, values, callback) => {
-      callback(new Error('Database error'), null);
+      callback(new Error('Erreur de base de données'), null);
     });
 
     const res = await request(app).post('/addToPanier').send({
@@ -109,6 +109,6 @@ describe('Test de addToPanier', () => {
     });
 
     expect(res.status).toBe(500);
-    expect(res.body.message).toBe('Veritabanı hatası!');
+    expect(res.body.message).toBe('Erreur de base de données !');
   });
 });
