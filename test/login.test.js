@@ -1,8 +1,6 @@
 const request = require('supertest');
 const { app, db } = require('../backend/app');
 
-/* Automatiser et executer le code a chaque fois que un git request est fait */
-
 describe('Test de login', () => {
   beforeEach(() => {
     jest.clearAllMocks();
